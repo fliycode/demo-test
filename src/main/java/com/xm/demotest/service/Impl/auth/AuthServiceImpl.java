@@ -18,26 +18,26 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Set<String> getPermissions(Integer id) {
-        // 从Redis中获取权限码
-        String key = "user:" + id + ":permissions";
-        Set<String> permissions = redisTemplate.opsForSet().members(key);
-
-
-
-
-        return permissions;
+        return Set.of();
     }
 
     @Override
     public boolean hasPermission(Integer id, String permission) {
-        // 从Redis中获取权限码
-        String key = "user:" + id + ":permissions";
-        Set<String> permissions = redisTemplate.opsForSet().members(key);
-
-        // 检查是否包含指定的权限码
-        if (permissions != null && permissions.contains(permission)) {
-            return true;
-        }
         return false;
+    }
+
+    @Override
+    public void cacheUserPermissions(Integer userId, Set<String> permissions) {
+
+    }
+
+    @Override
+    public void clearUserPermissionsCache(Integer userId) {
+
+    }
+
+    @Override
+    public void refreshUserPermissionsCache(Integer userId) {
+
     }
 }

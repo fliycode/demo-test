@@ -1,5 +1,6 @@
 package com.xm.demotest.controller.user;
 
+import com.xm.demotest.common.Result;
 import com.xm.demotest.service.user.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,15 +13,19 @@ import java.util.Map;
 public class RegisterController {
     @Autowired
     private RegisterService registerService;
-    // 注册接口
+
     @PostMapping("/user/register")
-    public Map<String, String> register(@RequestParam Map<String, String> map)
-    {
-        String username = map.get("username");
-        String password = map.get("password");
-        String phone = map.get("phone");
-        String name = map.get("name");
-        String status = "1";
-        return registerService.register(username, password, phone, name, status);
+    public Result<Map<String, String>> register(@RequestParam String username,
+                                                @RequestParam String password,
+                                                @RequestParam(required = false) String phone,
+                                                @RequestParam(required = false) String name) {
+        String status = "1"; // 默认状态为启用
+        Map<String, String> result = registerService.register(username, password, phone, name, status);
+        
+        if (result.containsKey("error_message")) {
+            return Result.error(result.get("error_message"));
+        }
+        
+        return Result.success("注册成功", result);
     }
 }

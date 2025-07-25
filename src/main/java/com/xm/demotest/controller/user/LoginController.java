@@ -1,7 +1,6 @@
 package com.xm.demotest.controller.user;
 
-
-
+import com.xm.demotest.common.Result;
 import com.xm.demotest.service.user.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +15,14 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/user/login")
-    public Map<String, String> login(@RequestParam Map<String, String> map) {
-        String username = map.get("username");
-        String password = map.get("password");
-        return loginService.getToken(username, password);
+    public Result<Map<String, String>> login(@RequestParam String username, 
+                                             @RequestParam String password) {
+        Map<String, String> result = loginService.getToken(username, password);
+        
+        if (result.containsKey("error_message")) {
+            return Result.error(result.get("error_message"));
+        }
+        
+        return Result.success("登录成功", result);
     }
 }

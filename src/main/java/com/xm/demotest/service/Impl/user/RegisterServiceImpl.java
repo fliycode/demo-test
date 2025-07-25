@@ -32,16 +32,10 @@ public class RegisterServiceImpl implements RegisterService {
             result.put("error_message", "密码长度不能少于6位");
             return result;
         }
-        // 检查手机号
-        if (phone == null || !phone.matches("^1[3-9]\\d{9}$")) {
+        // 检查手机号（可选）
+        if (phone != null && !phone.trim().isEmpty() && !phone.matches("^1[3-9]\\d{9}$")) {
             // 手机号格式不正确
             result.put("error_message", "手机号格式不正确");
-            return result;
-        }
-        // 检查姓名
-        if (name == null || name.trim().isEmpty()) {
-            // 姓名不能为空
-            result.put("error_message", "姓名不能为空");
             return result;
         }
 

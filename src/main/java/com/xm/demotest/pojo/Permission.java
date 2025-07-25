@@ -1,6 +1,8 @@
 package com.xm.demotest.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName("permission")
 public class Permission {
+    @TableId(type = IdType.AUTO)
     private Integer id;
     @TableField(value = "parent_id")
     private Integer parentId;

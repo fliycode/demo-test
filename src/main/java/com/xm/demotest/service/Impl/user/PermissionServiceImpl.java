@@ -35,16 +35,47 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void deletePermission(Integer permissionId) {
-
+        if (permissionId == null) {
+            throw new RuntimeException("权限ID不能为空");
+        }
+        Permission permission = permissionMapper.selectById(permissionId);
+        if (permission == null) {
+            throw new RuntimeException("权限不存在");
+        }
+        permissionMapper.deleteById(permissionId);
     }
 
     @Override
     public void updatePermission(Integer permissionId, String permissionName, String permissionStr) {
-
+        if (permissionId == null) {
+            throw new RuntimeException("权限ID不能为空");
+        }
+        Permission permission = permissionMapper.selectById(permissionId);
+        if (permission == null) {
+            throw new RuntimeException("权限不存在");
+        }
+        if (permissionName == null || permissionName.trim().isEmpty()) {
+            throw new RuntimeException("权限名称不能为空");
+        }
+        if (permissionStr == null || permissionStr.trim().isEmpty()) {
+            throw new RuntimeException("权限字符串不能为空");
+        }
+        permission.setPermissionName(permissionName);
+        permission.setPermissionStr(permissionStr);
+        permissionMapper.updateById(permission);
     }
 
     @Override
     public Map<String, Object> getPermissionInfo(Integer permissionId) {
-        return Map.of();
+        Permission permission = permissionMapper.selectById(permissionId);
+        if (permission == null) {
+            throw new RuntimeException("权限不存在");
+        }
+        return Map.of(
+                "id", permission.getId(),
+                "parentId", permission.getParentId(),
+                "permissionName", permission.getPermissionName(),
+                "permissionStr", permission.getPermissionStr()
+        );
     }
 }

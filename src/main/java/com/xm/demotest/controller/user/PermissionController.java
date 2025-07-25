@@ -1,5 +1,6 @@
 package com.xm.demotest.controller.user;
 
+import com.xm.demotest.config.fliter.PermissionRequired;
 import com.xm.demotest.service.user.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ public class PermissionController {
 
     // 添加权限
     @PostMapping("/permission/add")
+    @PermissionRequired("user:per:add")
     public Map<String, String> addPermission(Integer parentId, String permissionName, String permissionStr)
     {
         permissionService.addPermission(parentId, permissionName, permissionStr);
@@ -21,6 +23,7 @@ public class PermissionController {
 
     // 删除权限
     @DeleteMapping("/permission/delete")
+    @PermissionRequired("user:per:delete")
     public Map<String, String> deletePermission(Integer permissionId)
     {
         permissionService.deletePermission(permissionId);
@@ -29,6 +32,7 @@ public class PermissionController {
 
     // 更新权限
     @PutMapping("/permission/update")
+    @PermissionRequired("user:per:update")
     public Map<String, String> updatePermission(Integer permissionId, String permissionName, String permissionStr)
     {
         permissionService.updatePermission(permissionId, permissionName, permissionStr);
@@ -37,6 +41,7 @@ public class PermissionController {
 
     // 获取权限信息
     @GetMapping("/permission/info")
+    @PermissionRequired("user:per:info")
     Map<String, Object> getPermissionInfo(Integer permissionId) {
         return permissionService.getPermissionInfo(permissionId);
     }

@@ -5,6 +5,7 @@ import com.xm.demotest.utils.PasswordUtil;
 import com.xm.demotest.mapper.UserMapper;
 import com.xm.demotest.pojo.User;
 import com.xm.demotest.service.user.LoginService;
+import com.xm.demotest.service.Impl.auth.AuthServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class LoginServiceImpl implements LoginService {
    private UserMapper userMapper;
    @Autowired
    private StringRedisTemplate redisTemplate;
+   @Autowired
+   private AuthServiceImpl authService;
 
    // Token过期时间
     private static final long TOKEN_EXPIRATION_TIME = 3600; // 1小时
@@ -48,7 +51,12 @@ public class LoginServiceImpl implements LoginService {
                 user.getId().toString(),
                 TOKEN_EXPIRATION_TIME
         );
+        
+        // 缓存用户权限到Redis
+        authService.refreshUserPermissions(user.getId());
+        
         result.put("token", token);
+        result.put("user_id", user.getId().toString());
         return result;
     }
 }

@@ -33,39 +33,43 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void deleteRole(Integer roleId) {
-        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("role_id", roleId);
-        List<Role> role = roleMapper.selectList(queryWrapper);
-        if (role.isEmpty()) {
+        if (roleId == null) {
+            throw new RuntimeException("角色ID不能为空");
+        }
+        Role role = roleMapper.selectById(roleId);
+        if (role == null) {
             throw new RuntimeException("角色不存在");
         }
-        roleMapper.delete(queryWrapper);
+        roleMapper.deleteById(roleId);
     }
 
     @Override
     public void updateRole(Integer roleId, String roleName, String roleKey) {
-        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("role_id", roleId);
-        List<Role> role = roleMapper.selectList(queryWrapper);
-        if (role.isEmpty()) {
+        if (roleId == null) {
+            throw new RuntimeException("角色ID不能为空");
+        }
+        Role role = roleMapper.selectById(roleId);
+        if (role == null) {
             throw new RuntimeException("角色不存在");
         }
         if (roleName == null || roleName.trim().isEmpty()) {
             throw new RuntimeException("角色名不能为空");
         }
-        Role updatedRole = new Role(roleId, roleName, roleKey);
-        roleMapper.updateById(updatedRole);
+        role.setRoleName(roleName);
+        role.setRoleKey(roleKey);
+        roleMapper.updateById(role);
     }
 
     @Override
     public Map<String, Object> getRoleInfo(Integer roleId) {
-        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("role_id", roleId);
-        List<Role> role = roleMapper.selectList(queryWrapper);
-        if (role.isEmpty()) {
+        Role role = roleMapper.selectById(roleId);
+        if (role == null) {
             throw new RuntimeException("角色不存在");
         }
-        Role foundRole = role.get(0);
-        \
+        return Map.of(
+                "id", role.getId(),
+                "roleName", role.getRoleName(),
+                "roleKey", role.getRoleKey()
+        );
     }
 }

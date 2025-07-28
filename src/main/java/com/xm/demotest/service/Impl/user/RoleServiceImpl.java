@@ -66,6 +66,10 @@ public class RoleServiceImpl implements RoleService {
             throw new RuntimeException("角色不存在");
         }
         Role foundRole = role.get(0);
-        \
+        return Map.of(
+                "roleId", foundRole.getId(),
+                "roleName", foundRole.getRoleName(),
+                "roleKey", foundRole.getRoleKey()
+        );
     }
 }

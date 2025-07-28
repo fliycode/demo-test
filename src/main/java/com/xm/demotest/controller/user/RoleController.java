@@ -18,7 +18,9 @@ public class RoleController  {
     private RoleService roleService;
 
     @PostMapping("/role/add")
-    public Map<String, String> addRole(String roleName, String description) {
+    public Map<String, String> addRole(@RequestParam Map<String, String> map) {
+        String roleName = map.get("roleName");
+        String description = map.get("description");
         roleService.addRole(roleName, description);
         return Map.of("error_message","角色添加成功");
     }
@@ -28,7 +30,10 @@ public class RoleController  {
         return Map.of("error_message","角色删除成功");
     }
     @PutMapping("/role/update")
-    public Map<String, String> updateRole(Integer roleId, String roleName, String roleKey) {
+    public Map<String, String> updateRole(@RequestParam Map<String, String> map) {
+        Integer roleId = Integer.valueOf(map.get("roleId"));
+        String roleName = map.get("roleName");
+        String roleKey = map.get("roleKey");
         roleService.updateRole(roleId, roleName, roleKey);
         return Map.of("error_message", "角色更新成功");
     }

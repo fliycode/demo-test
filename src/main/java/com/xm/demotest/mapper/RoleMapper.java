@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper
 public interface RoleMapper extends BaseMapper<Role> {
 
+    // 通过UserID查询角色
     @Select("SELECT r.* " +
             "FROM role r " +
             "INNER JOIN user_role ur ON r.id = ur.role_id " +

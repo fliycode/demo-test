@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -45,8 +46,9 @@ public class LoginServiceImpl implements LoginService {
         // 存储到Redis中 (key: token, value: id)
         redisTemplate.opsForValue().set(
                 token,
-                user.getId().toString(),
-                TOKEN_EXPIRATION_TIME
+                String.valueOf((user.getId())),
+                TOKEN_EXPIRATION_TIME,
+                TimeUnit.SECONDS
         );
         result.put("token", token);
         return result;

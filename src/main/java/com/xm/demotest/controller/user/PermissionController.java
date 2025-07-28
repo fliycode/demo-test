@@ -13,8 +13,12 @@ public class PermissionController {
 
     // 添加权限
     @PostMapping("/permission/add")
-    public Map<String, String> addPermission(Integer parentId, String permissionName, String permissionStr)
+    public Map<String, String> addPermission(Map<String, String> map)
     {
+
+        Integer parentId = Integer.valueOf(map.get("parentId"));
+        String permissionName = map.get("permissionName");
+        String permissionStr = map.get("permissionStr");
         permissionService.addPermission(parentId, permissionName, permissionStr);
         return Map.of("error_message", "权限添加成功");
     }
@@ -29,8 +33,11 @@ public class PermissionController {
 
     // 更新权限
     @PutMapping("/permission/update")
-    public Map<String, String> updatePermission(Integer permissionId, String permissionName, String permissionStr)
+    public Map<String, String> updatePermission(@RequestParam Map<String, String> map)
     {
+        Integer permissionId = Integer.valueOf(map.get("permissionId"));
+        String permissionName = map.get("permissionName");
+        String permissionStr = map.get("permissionStr");
         permissionService.updatePermission(permissionId, permissionName, permissionStr);
         return Map.of("error_message", "权限更新成功");
     }

@@ -17,7 +17,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void addPermission(Integer parentId, String permissionName, String permissionStr) {
-        QueryWrapper<permissionMapper> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("permission_name", permissionName);
         if (permissionMapper.selectCount(queryWrapper) > 0) {
             throw new RuntimeException("权限名称已存在");

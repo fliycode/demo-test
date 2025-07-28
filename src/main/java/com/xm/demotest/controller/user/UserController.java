@@ -1,73 +1,140 @@
 package com.xm.demotest.controller.user;
 
-
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xm.demotest.common.Result;
+import com.xm.demotest.pojo.User;
 import com.xm.demotest.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/user/add")
-    public Map<String,String> addUser(@RequestParam Map<String, String> map) {
-        Map<String, String> result = new HashMap<>();
-        String username = map.get("username");
-        String password = map.get("password");
-        String phone = map.get("phone");
-        String name = map.get("name");
-        String status = map.get("status");
+    @PostMapping("/add")
+    public Result<String> addUser(@RequestParam String username,
+                                  @RequestParam String password,
+                                  @RequestParam String phone,
+                                  @RequestParam String name,
+                                  @RequestParam(required = false) String status) {
         try {
             userService.addUser(username, password, phone, name, status);
-            result.put("error_message", "用户添加成功");
+            return Result.success("用户添加成功");
         } catch (Exception e) {
-            result.put("error_message", e.getMessage());
-            throw new RuntimeException(e);
+            return Result.error(e.getMessage());
         }
-        return result;
     }
 
-    @DeleteMapping("/user/delete")
-    public Map<String,String> deleteUser(String username) {
-        Map<String, String> result = new HashMap<>();
+    @DeleteMapping("/delete/{username}")
+    public Result<String> deleteUser(@PathVariable String username) {
         try {
             userService.deleteUser(username);
-            result.put("error_message", "用户删除成功");
+            return Result.success("用户删除成功");
         } catch (Exception e) {
-            result.put("error_message", e.getMessage());
-            throw new RuntimeException(e);
+            return Result.error(e.getMessage());
         }
-        return result;
     }
 
-    @PutMapping("/user/update")
-    public Map<String, String> updateUser(@RequestParam Map<String, String> map) {
-        Map<String, String> result = new HashMap<>();
-        String username = map.get("username");
-        String password = map.get("password");
-        String phone = map.get("phone");
-        String name = map.get("name");
-        String status = map.get("status");
+    @DeleteMapping("/delete/id/{userId}")
+    public Result<String> deleteUserById(@PathVariable Integer userId) {
+        try {
+            userService.deleteUserById(userId);
+            return Result.success("用户删除成功");
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 
+    @PutMapping("/update")
+    public Result<String> updateUser(@RequestParam String username,
+                                     @RequestParam(required = false) String password,
+                                     @RequestParam(required = false) String phone,
+                                     @RequestParam(required = false) String name,
+                                     @RequestParam(required = false) String status) {
         try {
             userService.updateUser(username, password, phone, name, status);
-            result.put("error_message", "用户更新成功");
+            return Result.success("用户更新成功");
         } catch (Exception e) {
-            result.put("error_message", e.getMessage());
-            throw new RuntimeException(e);
+            return Result.error(e.getMessage());
         }
-        return result;
     }
 
-    @GetMapping("/user/info/{userId}")
-    public Map<String, Object> getUserInfo(String username) {
-        return userService.getUserInfo(username);
+    @GetMapping("/info/{username}")
+    public Result<Map<String, Object>> getUserInfo(@PathVariable String username) {
+        try {
+            Map<String, Object> userInfo = userService.getUserInfo(username);
+            return Result.success(userInfo);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
     }
 
+    @GetMapping("/info/id/{userId}")
+    public Result<Map<String, Object>> getUserInfoById(@PathVariable Integer userId) {
+        try {
+            Map<String, Object> userInfo = userService.getUserInfoById(userId);
+            return Result.success(userInfo);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 
+    @GetMapping("/list")
+    public Result<List<User>> getAllUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
+            return Result.success(users);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @GetMapping("/page")
+    public Result<Page<User>> getUsersByPage(@RequestParam(defaultValue = "1") Integer current,
+                                             @RequestParam(defaultValue = "10") Integer size,
+                                             @RequestParam(required = false) String keyword) {
+        try {
+            Page<User> userPage = userService.getUsersByPage(current, size, keyword);
+            return Result.success(userPage);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/assignRoles")
+    public Result<String> assignRoles(@RequestParam Integer userId,
+                                      @RequestParam List<Integer> roleIds) {
+        try {
+            userService.assignRoles(userId, roleIds);
+            return Result.success("角色分配成功");
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @GetMapping("/roles/{userId}")
+    public Result<List<Integer>> getUserRoles(@PathVariable Integer userId) {
+        try {
+            List<Integer> roleIds = userService.getUserRoles(userId);
+            return Result.success(roleIds);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PutMapping("/status")
+    public Result<String> updateUserStatus(@RequestParam Integer userId,
+                                           @RequestParam String status) {
+        try {
+            userService.updateUserStatus(userId, status);
+            return Result.success("用户状态更新成功");
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 }

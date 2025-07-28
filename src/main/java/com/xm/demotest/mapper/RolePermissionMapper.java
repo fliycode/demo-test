@@ -3,6 +3,7 @@ package com.xm.demotest.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xm.demotest.pojo.RolePermission;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -26,6 +27,12 @@ public interface RolePermissionMapper extends BaseMapper<RolePermission> {
     /**
      * 批量插入角色权限关联
      */
+    @Insert("<script>" +
+            "INSERT INTO role_permission (role_id, permission_id) VALUES " +
+            "<foreach collection='list' item='item' separator=','>" +
+            "(#{item.roleId}, #{item.permissionId})" +
+            "</foreach>" +
+            "</script>")
     void batchInsert(List<RolePermission> rolePermissions);
 
     /**

@@ -40,6 +40,20 @@ public class Result<T> {
         return new Result<>(data);
     }
 
+    public static <T> Result<T> success(T data, String message) {
+        Result<T> result = new Result<>(data);
+        result.setMessage(message);
+        return result;
+    }
+
+    public static <T> Result<T> error(String message) {
+        return new Result<>(500, message);
+    }
+
+    public static <T> Result<T> error(int code, String message) {
+        return new Result<>(code, message);
+    }
+
     public static <T> Result<T> fail(String message) {
         return new Result<>(500, message);
     }
